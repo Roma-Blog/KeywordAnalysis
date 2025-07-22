@@ -17,7 +17,7 @@ app.layout = html.Div([
         placeholder='Выберите слова для анализа'
     ),
     dcc.Dropdown(
-        id='exclude-word-dropdown',  # Новый элемент для исключения слов
+        id='exclude-word-dropdown', 
         options=[{'label': word, 'value': word} for word in data.data_words['word'].unique()],
         multi=True,
         placeholder='Выберите слова для исключения'
@@ -57,12 +57,14 @@ app.layout = html.Div([
 @app.callback(
     Output('visits-graph', 'figure'),
     Input('word-dropdown', 'value'),
-    Input('exclude-word-dropdown', 'value'),  # Новый Input
+    Input('exclude-word-dropdown', 'value'), 
     Input('source-dropdown', 'value'),
     Input('date-picker-range', 'start_date'),
     Input('date-picker-range', 'end_date'),
     Input('timeframe-radio', 'value')
 )
+
+#Обновление графика
 def update_graph(selected_words, exclude_words, selected_sources, start_date, end_date, timeframe):
     filtered_df = data.data_words.copy()
     
@@ -79,6 +81,7 @@ def update_graph(selected_words, exclude_words, selected_sources, start_date, en
     else:
         grouped_df = filtered_df.groupby('date', as_index=False).sum()
 
+    #Рисование графика
     fig = px.bar(grouped_df, 
                  x='date', 
                  y='visits', 
@@ -92,5 +95,6 @@ def update_graph(selected_words, exclude_words, selected_sources, start_date, en
     
     return fig
 
+#Запуск сервера по адресу http://127.0.0.1:8050/
 if __name__ == '__main__':
     app.run(debug=True)
